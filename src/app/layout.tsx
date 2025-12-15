@@ -36,7 +36,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className=" max-w-4xl mx-auto px-8 lg:px-0">
-            {" "}
             <Header />
             {children}
           </main>

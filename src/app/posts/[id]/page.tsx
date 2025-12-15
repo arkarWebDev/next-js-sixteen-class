@@ -1,5 +1,6 @@
-import { FAKE_POSTS } from "@/data";
 import PostItem from "@/features/post/components/post-item";
+import { getPost } from "@/features/post/queries/get-post";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -7,10 +8,10 @@ interface Props {
 
 async function SinglePost({ params }: Props) {
   const { id } = await params;
-  const post = FAKE_POSTS.find((post) => post.id === parseInt(id));
+  const post = await getPost(id);
 
   if (!post) {
-    return <h2>Post not found.</h2>;
+    notFound();
   }
 
   return <PostItem {...post} isCard={false} />;

@@ -1,16 +1,15 @@
 import Heading from "@/components/heading";
-import { FAKE_POSTS } from "@/data";
-import PostItem from "@/features/post/components/post-item";
+import PostList from "@/features/post/components/post-list";
 
-function Posts() {
+import { Suspense } from "react";
+
+async function Posts() {
   return (
     <main>
       <Heading title="All posts" description="View all forum posts." />
-      <div className="space-y-6">
-        {FAKE_POSTS.map((post) => (
-          <PostItem {...post} key={post.id} />
-        ))}
-      </div>
+      <Suspense fallback={<p className="text-white">fetching posts ...</p>}>
+        <PostList />
+      </Suspense>
     </main>
   );
 }
