@@ -1,4 +1,4 @@
-import { ABOUT, POSTS } from "@/path";
+import { ABOUT, POSTS } from "@/lib/path";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggler";
