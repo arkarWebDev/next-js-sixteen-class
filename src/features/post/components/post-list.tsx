@@ -3,6 +3,7 @@ import { getPosts } from "@/features/post/queries/get-posts";
 
 async function PostList() {
   const posts = await getPosts();
+
   return (
     <div className="space-y-6">
       {posts.map((post) => (
