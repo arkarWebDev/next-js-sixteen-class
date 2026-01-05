@@ -1,6 +1,5 @@
 import PostItem from "@/features/post/components/post-item";
 import { getPost } from "@/features/post/queries/get-post";
-import { getPosts } from "@/features/post/queries/get-posts";
 import { notFound } from "next/navigation";
 
 interface Props {
