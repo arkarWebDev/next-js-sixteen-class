@@ -1,4 +1,4 @@
-import { ABOUT, POSTS } from "@/lib/path";
+import { aboutPath, postsPath } from "@/path";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggler";
@@ -14,10 +14,10 @@ function Header() {
       </Link>
       <div>
         <Button variant={"link"}>
-          <Link href={POSTS}>Posts</Link>
+          <Link href={postsPath}>Posts</Link>
         </Button>
         <Button variant={"link"}>
-          <Link href={ABOUT}>About</Link>
+          <Link href={aboutPath}>About</Link>
         </Button>
         <ModeToggle />
       </div>

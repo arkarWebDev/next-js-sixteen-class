@@ -6,21 +6,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Post } from "../types/post";
 import { Button } from "@/components/ui/button";
 import { Edit, MoveUpRight } from "lucide-react";
 import Link from "next/link";
-import { EDIT_POST, SINGLE_POST } from "@/lib/path";
+import { editPostPath, singlePostPath } from "@/path";
 import { cn } from "@/lib/utils";
 import { deletePost } from "../actions/delete-post";
+import { Post } from "../../../../generated/prisma/client";
+import { Badge } from "@/components/ui/badge";
+import DeleteButton from "./delete-button";
 
 interface Props extends Post {
   isCard?: boolean;
 }
 
-function PostItem({ id, title, body, isCard = true }: Props) {
+function PostItem({ id, title, body, isCard = true, status }: Props) {
   return (
-    <Card>
+    <Card className="relative">
+      <Badge
+        className="absolute top-4 right-4"
+        variant={status === "IN_PROGRESS" ? "outline" : "default"}
+      >
+        {status}
+      </Badge>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription className={cn(isCard && "line-clamp-2")}>
@@ -30,26 +38,18 @@ function PostItem({ id, title, body, isCard = true }: Props) {
       {isCard && (
         <CardContent className="space-x-4">
           <Button asChild>
-            <Link href={SINGLE_POST(id)}>
+            <Link href={singlePostPath(id)}>
               <MoveUpRight /> Read
             </Link>
           </Button>
           <Button variant="secondary" asChild>
-            <Link href={EDIT_POST(id)}>
+            <Link href={editPostPath(id)}>
               <Edit /> Edit
             </Link>
           </Button>
         </CardContent>
       )}
-      {!isCard && (
-        <CardFooter>
-          <form action={deletePost.bind(null, id as string)}>
-            <Button variant={"destructive"} size={"sm"}>
-              Delete
-            </Button>
-          </form>
-        </CardFooter>
-      )}
+      {!isCard && <DeleteButton id={id} />}
     </Card>
   );
 }

@@ -1,45 +1,92 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createPost } from "@/features/post/actions/create-post";
-import SubmitButton from "./submit-button";
 import CardWrapper from "./card-wrapper";
-import { useActionState } from "react";
+import { useAction } from "next-safe-action/hooks";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { postCreateSchema } from "../schemas";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import SubmitButton from "./submit-button";
 
 function CreatePostForm() {
-  const [actionState, formAction] = useActionState(createPost, {
-    message: "",
+  const { execute, isPending, hasErrored, hasSucceeded } =
+    useAction(createPost);
+
+  const form = useForm<z.infer<typeof postCreateSchema>>({
+    resolver: zodResolver(postCreateSchema),
+    defaultValues: {
+      title: "",
+      body: "",
+    },
   });
+
+  function onSubmit(values: z.infer<typeof postCreateSchema>) {
+    const { title, body } = values;
+    execute({ title, body });
+  }
+
+  useEffect(() => {
+    if (hasSucceeded) {
+      form.reset();
+      toast.success("Post created.");
+    }
+
+    if (hasErrored) {
+      toast.error("Something went wrong.");
+    }
+  }, [hasErrored, hasSucceeded]);
 
   return (
     <CardWrapper
       title="Create new post"
       description="This will be create new post"
     >
-      <form action={formAction} className="space-y-4">
-        <div>
-          <Label htmlFor="title">Title</Label>
-          <Input
-            type="text"
-            id="title"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
             name="title"
-            defaultValue={(actionState.payload?.get("title") as string) ?? ""}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div>
-          <Label htmlFor="body">Description</Label>
-          <Textarea
-            id="body"
+          <FormField
+            control={form.control}
             name="body"
-            defaultValue={(actionState.payload?.get("body") as string) ?? ""}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <SubmitButton label="Create" />
-      </form>
-      <span>{actionState.message}</span>
+          <SubmitButton label="Create" isPending={isPending} />
+        </form>
+      </Form>
     </CardWrapper>
   );
 }
