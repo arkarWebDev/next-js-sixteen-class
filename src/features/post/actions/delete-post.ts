@@ -5,6 +5,7 @@ import { actionClient } from "@/lib/safe-action";
 import { postsPath } from "@/path";
 import { redirect } from "next/navigation";
 import { postDeleteSchema } from "../schemas";
+import { revalidatePath } from "next/cache";
 
 export const deletePost = actionClient
   .inputSchema(postDeleteSchema)
@@ -15,5 +16,6 @@ export const deletePost = actionClient
       },
     });
 
+    revalidatePath(postsPath);
     redirect(postsPath);
   });
