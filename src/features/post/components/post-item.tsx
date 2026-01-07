@@ -11,7 +11,6 @@ import { Edit, MoveUpRight } from "lucide-react";
 import Link from "next/link";
 import { editPostPath, singlePostPath } from "@/path";
 import { cn } from "@/lib/utils";
-import { deletePost } from "../actions/delete-post";
 import { Post } from "../../../../generated/prisma/client";
 import { Badge } from "@/components/ui/badge";
 import DeleteButton from "./delete-button";
