@@ -2,7 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createPost } from "@/features/post/actions/create-post";
-import CardWrapper from "./card-wrapper";
+import CardWrapper from "../../../components/card-wrapper";
 import { useAction } from "next-safe-action/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import SubmitButton from "./submit-button";
+import SubmitButton from "../../../components/submit-button";
 
 function CreatePostForm() {
   const { execute, isPending, hasErrored, hasSucceeded } =

@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -11,15 +10,25 @@ import { Edit, MoveUpRight } from "lucide-react";
 import Link from "next/link";
 import { editPostPath, singlePostPath } from "@/path";
 import { cn } from "@/lib/utils";
-import { Post } from "../../../../generated/prisma/client";
+import { Post, User } from "../../../../generated/prisma/client";
 import { Badge } from "@/components/ui/badge";
 import DeleteButton from "./delete-button";
+import { getSession } from "@/lib/getSession";
 
 interface Props extends Post {
   isCard?: boolean;
+  user: User;
 }
 
-function PostItem({ id, title, body, isCard = true, status }: Props) {
+async function PostItem({
+  id,
+  title,
+  body,
+  isCard = true,
+  status,
+  user,
+}: Props) {
+  const session = await getSession();
   return (
     <Card className="relative">
       <Badge
@@ -33,6 +42,9 @@ function PostItem({ id, title, body, isCard = true, status }: Props) {
         <CardDescription className={cn(isCard && "line-clamp-2")}>
           {body}
         </CardDescription>
+        <p className="text-sm font-medium text-muted-foreground">
+          @{user.name}
+        </p>
       </CardHeader>
       {isCard && (
         <CardContent className="space-x-4">
@@ -41,13 +53,14 @@ function PostItem({ id, title, body, isCard = true, status }: Props) {
               <MoveUpRight /> Read
             </Link>
           </Button>
-          <Button variant="secondary" asChild>
+          {user.id === session?.user.id && (
             <Link href={editPostPath(id)}>
               <Edit /> Edit
             </Link>
-          </Button>
+          )}
         </CardContent>
       )}
+
       {!isCard && <DeleteButton id={id} />}
     </Card>
   );

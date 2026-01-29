@@ -8,14 +8,17 @@ export const FAKE_POSTS = [
   {
     title: "First post",
     body: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, maiores. Quos unde voluptatum omnis corporis autem maiores quam. Maxime, veritatis possimus voluptatibus a vitae molestiae officia sequi illum expedita nobis?",
+    userId: "rix9kYjmtuTtNeIS9k9S4H7AYuqZVxBv",
   },
   {
     title: "Second post",
     body: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, maiores. Quos unde voluptatum omnis corporis autem maiores quam. Maxime, veritatis possimus voluptatibus a vitae molestiae officia sequi illum expedita nobis?",
+    userId: "rix9kYjmtuTtNeIS9k9S4H7AYuqZVxBv",
   },
   {
     title: "Third post",
     body: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, maiores. Quos unde voluptatum omnis corporis autem maiores quam. Maxime, veritatis possimus voluptatibus a vitae molestiae officia sequi illum expedita nobis?",
+    userId: "rix9kYjmtuTtNeIS9k9S4H7AYuqZVxBv",
   },
 ];
 

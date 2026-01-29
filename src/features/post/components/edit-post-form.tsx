@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updatePost } from "../actions/update-post";
-import CardWrapper from "./card-wrapper";
+import CardWrapper from "../../../components/card-wrapper";
 import z from "zod";
 import { postUpdateSchema } from "../schemas";
 import {
@@ -18,7 +18,7 @@ import {
 import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import SubmitButton from "./submit-button";
+import SubmitButton from "../../../components/submit-button";
 import { Post } from "../../../../generated/prisma/client";
 import {
   Select,
