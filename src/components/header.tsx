@@ -2,14 +2,11 @@ import { postsPath, signInPath, signUpPath } from "@/path";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggler";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { signOut } from "@/features/auth/actions/signout";
+import { getSession } from "@/lib/getSession";
 
 async function Header() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSession();
 
   return (
     <div className="flex items-center justify-between mt-4 mb-8">
@@ -20,9 +17,6 @@ async function Header() {
         Dev.io
       </Link>
       <div className="flex items-center gap-2">
-        <Button variant={"link"}>
-          <Link href={postsPath}>Posts</Link>
-        </Button>
         {session ? <SignOutButton /> : <SignInAndSignUpButtons />}
         <ModeToggle />
       </div>
@@ -35,10 +29,10 @@ export default Header;
 function SignInAndSignUpButtons() {
   return (
     <div className="space-x-2">
-      <Button>
+      <Button size={"sm"}>
         <Link href={signUpPath}>Sign up</Link>
       </Button>
-      <Button variant={"outline"}>
+      <Button variant={"outline"} size={"sm"}>
         <Link href={signInPath}>Sign in</Link>
       </Button>
     </div>
@@ -47,10 +41,20 @@ function SignInAndSignUpButtons() {
 
 function SignOutButton() {
   return (
-    <form action={signOut}>
-      <Button variant={"destructive"} type="submit" className="cursor-pointer">
-        Sign out
+    <>
+      <Button variant={"link"}>
+        <Link href={postsPath}>my posts</Link>
       </Button>
-    </form>
+      <form action={signOut}>
+        <Button
+          variant={"destructive"}
+          type="submit"
+          className="cursor-pointer"
+          size={"sm"}
+        >
+          Sign out
+        </Button>
+      </form>
+    </>
   );
 }

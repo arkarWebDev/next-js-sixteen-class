@@ -5,8 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/lib/safe-action";
 import { postCreateSchema } from "../schemas";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/getSession";
 

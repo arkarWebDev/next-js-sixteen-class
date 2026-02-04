@@ -5,10 +5,15 @@ interface postWithUser extends Post {
   user: User;
 }
 
-export const getPosts = async (): Promise<postWithUser[]> => {
+export const getPosts = async (
+  userId: string | undefined,
+): Promise<postWithUser[]> => {
   return prisma.post.findMany({
     orderBy: {
       createdAt: "desc",
+    },
+    where: {
+      userId,
     },
     include: {
       user: true,

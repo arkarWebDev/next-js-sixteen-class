@@ -21,9 +21,14 @@ import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { signIn } from "../actions/signin";
+import Link from "next/link";
+import { resetPasswordPath, signUpPath } from "@/path";
+import GithubOauthButton from "./github-oauth-form";
+import { useRouter } from "next/navigation";
 
 function SignInForm() {
-  const { isPending, execute, hasErrored, hasSucceeded } = useAction(signIn);
+  const { isPending, execute, result } = useAction(signIn);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -39,18 +44,45 @@ function SignInForm() {
   }
 
   useEffect(() => {
-    if (hasSucceeded) {
-      form.reset();
-      toast.success("SignUp success.");
+    const data = result.data;
+
+    if (!data) {
+      return;
     }
 
-    if (hasErrored) {
-      toast.error("Something went wrong.");
+    if (data?.success) {
+      toast.success("Signin success.");
+      router.push("/");
+      router.refresh();
     }
-  }, [hasErrored, hasSucceeded]);
+
+    if (!data?.success) {
+      toast.error(data?.error);
+    }
+  }, [result]);
+
+  const Footer = () => {
+    return (
+      <div className="text-sm font-medium text-muted-foreground flex justify-between w-full">
+        <p>
+          Don't have an account ?{" "}
+          <Link href={signUpPath} className="underline">
+            Sign up
+          </Link>
+        </p>
+        <Link href={resetPasswordPath} className="underline">
+          forgot password?
+        </Link>
+      </div>
+    );
+  };
 
   return (
-    <CardWrapper title="Sign in" description="Sign in your existing account">
+    <CardWrapper
+      title="Sign in"
+      description="Sign in your existing account"
+      footer={<Footer />}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -83,6 +115,8 @@ function SignInForm() {
           <SubmitButton label="Sign in" isPending={isPending} />
         </form>
       </Form>
+      <hr className=" text-muted-foreground my-6" />
+      <GithubOauthButton />
     </CardWrapper>
   );
 }

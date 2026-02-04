@@ -1,10 +1,17 @@
 import { prisma } from "@/lib/prisma";
-import { Post } from "../../../../generated/prisma/client";
+import { Post, User } from "../../../../generated/prisma/client";
 
-export const getPost = async (id: string): Promise<Post | null> => {
+interface postWithUser extends Post {
+  user: User;
+}
+
+export const getPost = async (id: string): Promise<postWithUser | null> => {
   return await prisma.post.findUnique({
     where: {
       id,
+    },
+    include: {
+      user: true,
     },
   });
 };

@@ -1,5 +1,17 @@
 import Heading from "@/components/heading";
+import PostList from "@/features/post/components/post-list";
 
-export default function Home() {
-  return <Heading title="Homepage" />;
+import { Suspense } from "react";
+
+async function Home() {
+  return (
+    <main>
+      <Heading title="All posts" description="View all forum posts." />
+      <Suspense fallback={<p className="text-white">fetching posts ...</p>}>
+        <PostList />
+      </Suspense>
+    </main>
+  );
 }
+
+export default Home;

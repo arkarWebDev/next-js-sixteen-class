@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { actionClient } from "@/lib/safe-action";
 import { postUpdateSchema } from "../schemas";
 import { getSession } from "@/lib/getSession";
+import { isOwner } from "@/lib/isOwner";
 
 export const updatePost = actionClient
   .inputSchema(postUpdateSchema)
@@ -15,6 +16,11 @@ export const updatePost = actionClient
 
     if (!session) {
       redirect(signInPath);
+    }
+
+    const owner = await isOwner(session.user.id);
+    if (!owner) {
+      throw new Error("You are not owner");
     }
 
     await prisma.post.update({

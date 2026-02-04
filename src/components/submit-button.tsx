@@ -7,7 +7,7 @@ type SubmitButtonProps = {
 };
 function SubmitButton({ label, isPending }: SubmitButtonProps) {
   return (
-    <Button type="submit" disabled={isPending}>
+    <Button type="submit" disabled={isPending} className="w-full">
       {isPending ? <LoaderCircle className=" animate-spin h-4 w-4" /> : label}
     </Button>
   );

@@ -1,6 +1,6 @@
 import SignInForm from "@/features/auth/components/signin-form";
 
-function SignIn() {
+async function SignIn() {
   return <SignInForm />;
 }
 

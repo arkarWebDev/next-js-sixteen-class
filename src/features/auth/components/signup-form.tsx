@@ -21,9 +21,13 @@ import { useAction } from "next-safe-action/hooks";
 import { signUp } from "../actions/signup";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import Link from "next/link";
+import { signInPath } from "@/path";
+import GithubOauthButton from "./github-oauth-form";
+import { redirect } from "next/navigation";
 
 function SignUpForm() {
-  const { isPending, execute, hasErrored, hasSucceeded } = useAction(signUp);
+  const { isPending, execute, result } = useAction(signUp);
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -41,18 +45,39 @@ function SignUpForm() {
   }
 
   useEffect(() => {
-    if (hasSucceeded) {
-      form.reset();
-      toast.success("SignUp success.");
+    const data = result.data;
+
+    if (!data) {
+      return;
     }
 
-    if (hasErrored) {
-      toast.error("Something went wrong.");
+    if (data?.success) {
+      toast.success("Signup success.");
+      redirect(signInPath);
     }
-  }, [hasErrored, hasSucceeded]);
+
+    if (!data?.success) {
+      toast.error(data?.error);
+    }
+  }, [result]);
+
+  const Footer = () => {
+    return (
+      <p className="text-sm font-medium text-muted-foreground">
+        Already have an account ?{" "}
+        <Link href={signInPath} className="underline">
+          Sign in
+        </Link>
+      </p>
+    );
+  };
 
   return (
-    <CardWrapper title="Sign up" description="Create your new account">
+    <CardWrapper
+      title="Sign up"
+      description="Create your new account"
+      footer={<Footer />}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -114,6 +139,8 @@ function SignUpForm() {
           <SubmitButton label="Sign up" isPending={isPending} />
         </form>
       </Form>
+      <hr className=" text-muted-foreground my-6" />
+      <GithubOauthButton />
     </CardWrapper>
   );
 }
