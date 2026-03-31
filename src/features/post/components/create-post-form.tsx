@@ -16,10 +16,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import SubmitButton from "../../../components/submit-button";
+import ImageUpload from "./image-upload";
 
 function CreatePostForm() {
   const { execute, isPending, hasErrored, hasSucceeded } =
@@ -30,12 +30,13 @@ function CreatePostForm() {
     defaultValues: {
       title: "",
       body: "",
+      images: [],
     },
   });
 
   function onSubmit(values: z.infer<typeof postCreateSchema>) {
-    const { title, body } = values;
-    execute({ title, body });
+    const { title, body, images } = values;
+    execute({ title, body, images });
   }
 
   useEffect(() => {
@@ -78,6 +79,24 @@ function CreatePostForm() {
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="images"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    max={4}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

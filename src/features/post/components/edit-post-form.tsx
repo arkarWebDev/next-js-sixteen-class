@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ImageUpload from "./image-upload";
 
 type EditPostFormProps = {
   post: Post;
@@ -43,12 +44,13 @@ function EditPostForm({ post }: EditPostFormProps) {
       title: post.title,
       body: post.body,
       status: post.status,
+      images: post.images ?? [],
     },
   });
 
   function onSubmit(values: z.infer<typeof postUpdateSchema>) {
-    const { title, body, id, status } = values;
-    execute({ title, body, id, status });
+    const { title, body, id, status, images } = values;
+    execute({ title, body, id, status, images });
   }
 
   useEffect(() => {
@@ -104,6 +106,24 @@ function EditPostForm({ post }: EditPostFormProps) {
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="images"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    max={4}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
