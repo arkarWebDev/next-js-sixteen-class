@@ -18,11 +18,17 @@ function ImageUpload({ value, onChange, max = 4 }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
+  const valueRef = useRef(value);
+  const onChangeRef = useRef(onChange);
+
+  valueRef.current = value;
+  onChangeRef.current = onChange;
+
   const { startUpload, isUploading } = useUploadThing("postImage", {
     onClientUploadComplete: (res: { url: string }[]) => {
       const urls = res.map((file) => file.url);
       if (urls.length) {
-        onChange([...value, ...urls].slice(0, max));
+        onChangeRef.current([...valueRef.current, ...urls].slice(0, max));
         toast.success("Image uploaded.");
       }
       setDragActive(false);
