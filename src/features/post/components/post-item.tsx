@@ -14,6 +14,7 @@ import { Post, User } from "../../../../generated/prisma/client";
 import { Badge } from "@/components/ui/badge";
 import DeleteButton from "./delete-button";
 import { isOwner } from "@/lib/isOwner";
+import PostImages from "./post-images";
 
 interface Props extends Post {
   isCard?: boolean;
@@ -25,6 +26,7 @@ async function PostItem({
   title,
   body,
   isCard = true,
+  images,
   status,
   user,
 }: Props) {
@@ -41,6 +43,7 @@ async function PostItem({
         <CardDescription className={cn(isCard && "line-clamp-2")}>
           {body}
         </CardDescription>
+        <PostImages images={images} />
         <p className="text-sm font-medium text-muted-foreground">
           @{user.name}
         </p>
