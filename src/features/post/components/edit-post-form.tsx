@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImageUpload from "./image-upload";
+import RichTextEditor from "@/components/rich-text-editor";
 
 type EditPostFormProps = {
   post: Post;
@@ -103,9 +104,9 @@ function EditPostForm({ post }: EditPostFormProps) {
             name="body"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <RichTextEditor value={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

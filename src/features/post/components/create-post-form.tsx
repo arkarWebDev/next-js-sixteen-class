@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import SubmitButton from "../../../components/submit-button";
 import ImageUpload from "./image-upload";
+import RichTextEditor from "@/components/rich-text-editor";
 
 function CreatePostForm() {
   const { execute, isPending, hasErrored, hasSucceeded } =
@@ -76,9 +77,9 @@ function CreatePostForm() {
             name="body"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <Textarea {...field} />
+                  <RichTextEditor value={field.value} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

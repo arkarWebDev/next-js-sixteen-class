@@ -40,9 +40,7 @@ async function PostItem({
       </Badge>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription className={cn(isCard && "line-clamp-2")}>
-          {body}
-        </CardDescription>
+        <CardDescription className={cn(isCard && "line-clamp-2", "prose dark:prose-invert prose-sm sm:prose-base max-w-none")} dangerouslySetInnerHTML={{ __html: body }} />
         <PostImages images={images} />
         <p className="text-sm font-medium text-muted-foreground">
           @{user.name}
