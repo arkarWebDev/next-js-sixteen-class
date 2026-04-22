@@ -4,6 +4,7 @@ import { SearchParams } from "../types/search-params";
 
 interface postWithUser extends Post {
   user: User;
+  votes: { value: number; userId: string }[];
 }
 
 interface PaginatedPosts {
@@ -39,6 +40,12 @@ export const getPosts = async (
       where: whereCondition,
       include: {
         user: true,
+        votes: {
+          select: {
+            value: true,
+            userId: true,
+          },
+        },
       },
       skip,
       take: POSTS_PER_PAGE,

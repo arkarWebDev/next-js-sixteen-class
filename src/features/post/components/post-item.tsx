@@ -15,10 +15,13 @@ import { Badge } from "@/components/ui/badge";
 import DeleteButton from "./delete-button";
 import { isOwner } from "@/lib/isOwner";
 import PostImages from "./post-images";
+import { getSession } from "@/lib/getSession";
+import VoteButtons from "./vote-buttons";
 
 interface Props extends Post {
   isCard?: boolean;
   user: User;
+  votes: { value: number; userId: string }[];
 }
 
 async function PostItem({
@@ -29,7 +32,17 @@ async function PostItem({
   images,
   status,
   user,
+  votes,
 }: Props) {
+  const session = await getSession();
+  const currentUserId = session?.user.id;
+
+  const score = votes?.reduce((acc, vote) => acc + vote.value, 0) || 0;
+
+  const userVote = currentUserId
+    ? votes?.find((v) => v.userId === currentUserId)?.value || null
+    : null;
+
   return (
     <Card className="relative">
       <Badge
@@ -40,11 +53,24 @@ async function PostItem({
       </Badge>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription className={cn(isCard && "line-clamp-2", "prose dark:prose-invert prose-sm sm:prose-base max-w-none")} dangerouslySetInnerHTML={{ __html: body }} />
+        <CardDescription
+          className={cn(
+            isCard && "line-clamp-2",
+            "prose dark:prose-invert prose-sm sm:prose-base max-w-none",
+          )}
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
         <PostImages images={images} />
         <p className="text-sm font-medium text-muted-foreground">
           @{user.name}
         </p>
+        <div>
+          <VoteButtons
+            postId={id}
+            initialScore={score}
+            initialUserVote={userVote}
+          />
+        </div>
       </CardHeader>
       {isCard && (
         <CardContent className="space-x-4">
