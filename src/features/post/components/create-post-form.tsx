@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import SubmitButton from "../../../components/submit-button";
 import ImageUpload from "./image-upload";
 import RichTextEditor from "@/components/rich-text-editor";
+import TagInput from "./tag-input";
 
 function CreatePostForm() {
   const { execute, isPending, hasErrored, hasSucceeded } =
@@ -32,12 +33,13 @@ function CreatePostForm() {
       title: "",
       body: "",
       images: [],
+      tags: [],
     },
   });
 
   function onSubmit(values: z.infer<typeof postCreateSchema>) {
-    const { title, body, images } = values;
-    execute({ title, body, images });
+    const { title, body, images, tags } = values;
+    execute({ title, body, images, tags });
   }
 
   useEffect(() => {
@@ -79,7 +81,10 @@ function CreatePostForm() {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <RichTextEditor value={field.value} onChange={field.onChange} />
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,6 +102,23 @@ function CreatePostForm() {
                     value={field.value || []}
                     onChange={field.onChange}
                     max={4}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <TagInput
+                    value={field.value || []}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

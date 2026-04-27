@@ -4,6 +4,7 @@ import { getPosts } from "@/features/post/queries/get-posts";
 import { SearchParams } from "../types/search-params";
 import SortSelect from "@/components/sort-select";
 import Pagination from "@/components/pagination";
+import TagFilter from "./tag-filter";
 
 interface Props {
   userId?: string | undefined;
@@ -19,6 +20,7 @@ async function PostList({ userId = undefined, searchParams }: Props) {
   return (
     <div className="space-y-6 my-6">
       <SearchInput placeholder="searh post with title" />
+      {searchParams.tag && <TagFilter tag={searchParams.tag} />}
       <SortSelect
         defaultValue="desc"
         options={[

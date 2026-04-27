@@ -11,33 +11,38 @@ import { isOwner } from "@/lib/isOwner";
 
 export const updatePost = actionClient
   .inputSchema(postUpdateSchema)
-  .action(async ({ parsedInput: { id, title, body, status, images = [] } }) => {
-    const session = await getSession();
+  .action(
+    async ({
+      parsedInput: { id, title, body, status, tags = [], images = [] },
+    }) => {
+      const session = await getSession();
 
-    if (!session) {
-      redirect(signInPath);
-    }
+      if (!session) {
+        redirect(signInPath);
+      }
 
-    const post = await prisma.post.findUnique({
-      where: { id },
-    });
+      const post = await prisma.post.findUnique({
+        where: { id },
+      });
 
-    if (!post || !(await isOwner(post.userId))) {
-      throw new Error("Not authorized");
-    }
+      if (!post || !(await isOwner(post.userId))) {
+        throw new Error("Not authorized");
+      }
 
-    await prisma.post.update({
-      where: {
-        id,
-      },
-      data: {
-        title,
-        body,
-        status,
-        images,
-      },
-    });
+      await prisma.post.update({
+        where: {
+          id,
+        },
+        data: {
+          title,
+          body,
+          status,
+          tags,
+          images,
+        },
+      });
 
-    revalidatePath(postsPath);
-    redirect(postsPath);
-  });
+      revalidatePath(postsPath);
+      redirect(postsPath);
+    },
+  );

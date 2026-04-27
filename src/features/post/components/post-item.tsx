@@ -33,6 +33,7 @@ async function PostItem({
   status,
   user,
   votes,
+  tags,
 }: Props) {
   const session = await getSession();
   const currentUserId = session?.user.id;
@@ -61,6 +62,20 @@ async function PostItem({
           dangerouslySetInnerHTML={{ __html: body }}
         />
         <PostImages images={images} />
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {tags.map((tag) => (
+              <Link key={tag} href={`/?tag=${tag}`}>
+                <Badge
+                  variant={"outline"}
+                  className="cursor-pointer hover:bg-secondary"
+                >
+                  #{tag}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        )}
         <p className="text-sm font-medium text-muted-foreground">
           @{user.name}
         </p>

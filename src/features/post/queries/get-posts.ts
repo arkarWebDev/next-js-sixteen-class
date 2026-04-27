@@ -20,6 +20,7 @@ export const getPosts = async (
   const POSTS_PER_PAGE = 2;
   const currentPage = Number(searchParams.page) || 1;
   const skip = (currentPage - 1) * POSTS_PER_PAGE;
+  const tagFilter = searchParams.tag;
 
   const whereCondition = {
     userId,
@@ -27,6 +28,11 @@ export const getPosts = async (
       contains: searchParams.search,
       mode: "insensitive" as const,
     },
+    ...(tagFilter && {
+      tags: {
+        has: tagFilter,
+      },
+    }),
   };
 
   const [totalCount, posts] = await prisma.$transaction([

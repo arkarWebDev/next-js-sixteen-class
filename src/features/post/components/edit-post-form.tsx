@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import ImageUpload from "./image-upload";
 import RichTextEditor from "@/components/rich-text-editor";
+import TagInput from "./tag-input";
 
 type EditPostFormProps = {
   post: Post;
@@ -46,12 +47,13 @@ function EditPostForm({ post }: EditPostFormProps) {
       body: post.body,
       status: post.status,
       images: post.images ?? [],
+      tags: post.tags ?? [],
     },
   });
 
   function onSubmit(values: z.infer<typeof postUpdateSchema>) {
-    const { title, body, id, status, images } = values;
-    execute({ title, body, id, status, images });
+    const { title, body, id, status, images, tags } = values;
+    execute({ title, body, id, status, images, tags });
   }
 
   useEffect(() => {
@@ -106,7 +108,10 @@ function EditPostForm({ post }: EditPostFormProps) {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <RichTextEditor value={field.value} onChange={field.onChange} />
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,6 +129,23 @@ function EditPostForm({ post }: EditPostFormProps) {
                     value={field.value || []}
                     onChange={field.onChange}
                     max={4}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <TagInput
+                    value={field.value || []}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

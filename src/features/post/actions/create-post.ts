@@ -10,7 +10,7 @@ import { getSession } from "@/lib/getSession";
 
 export const createPost = actionClient
   .inputSchema(postCreateSchema)
-  .action(async ({ parsedInput: { title, body, images = [] } }) => {
+  .action(async ({ parsedInput: { title, body, tags = [], images = [] } }) => {
     const session = await getSession();
 
     if (!session) {
@@ -23,10 +23,13 @@ export const createPost = actionClient
           title,
           body,
           images,
+          tags,
           userId: session?.user.id,
         },
       });
     } catch (error) {
+      console.log(error);
+
       throw new Error("create-post: Something went wrong!!");
     }
 
