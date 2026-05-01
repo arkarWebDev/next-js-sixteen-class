@@ -5,6 +5,7 @@ export async function GET() {
     search: "",
     sort: "desc",
     page: "2",
+    tag: undefined,
   });
 
   return Response.json(posts);
