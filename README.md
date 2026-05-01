@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dev Forum
 
-## Getting Started
+A full-stack developer discussion platform built with Next.js 16, Prisma, Better Auth, and Stripe subscriptions.
 
-First, run the development server:
+## Features
+
+- Email/password + GitHub authentication with Better Auth
+- Create, edit, and delete posts with rich text and image uploads
+- Commenting system for post discussions
+- Upvote/downvote system for posts
+- Profile page with user stats and premium status
+- Stripe-powered premium subscription checkout
+- Stripe webhook sync for premium state and payment details
+- Premium visual effects for subscribed users in post cards
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19 + TypeScript
+- Tailwind CSS 4 + shadcn/ui + Radix UI
+- Prisma ORM
+- Better Auth
+- Stripe API + Webhooks
+- Zod + React Hook Form + next-safe-action
+
+## Project Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Configure environment variables in `.env`:
+
+```env
+DATABASE_URL=
+BETTER_AUTH_URL=http://localhost:3000
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+RESEND_API_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_PREMIUM_PRICE_ID=
+STRIPE_WEBHOOK_SECRET=
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+3. Generate Prisma client and push schema:
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+4. Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stripe Webhook (Local)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project listens for Stripe webhooks at:
 
-## Learn More
+`/api/stripe/webhook`
 
-To learn more about Next.js, take a look at the following resources:
+Use Stripe CLI to forward events:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Copy the signing secret from CLI output into `STRIPE_WEBHOOK_SECRET`.
 
-## Deploy on Vercel
+## Useful Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `npm run dev` - Start local development server
+- `npm run build` - Production build
+- `npm run start` - Run production server
+- `npm run lint` - Run ESLint
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Suggested Demo Flow (Class Presentation)
+
+1. Sign up / sign in
+2. Create a post with tags and content
+3. Add comments on a post
+4. Upvote/downvote a post
+5. Open profile and start premium checkout
+6. Trigger webhook event and show premium status update
+7. Show premium username effect in post list
+
+## Notes
+
+- Premium checkout redirects back to profile with status query params.
+- Premium state is synced by Stripe webhook events.
+- Payment details are shown on profile after successful invoice events.

@@ -10,7 +10,7 @@ async function Comments({ postId }: CommentsProps) {
   const comments = await getComments(postId);
 
   return (
-    <div className="mt-4  space-y-4">
+    <div className="my-4 space-y-4">
       <CreateCommentForm />
       {comments.length > 0 &&
         comments.map((comment) => (

@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, MoveUpRight } from "lucide-react";
+import { Crown, Edit, MoveUpRight } from "lucide-react";
 import Link from "next/link";
 import { editPostPath, singlePostPath } from "@/path";
 import { cn } from "@/lib/utils";
@@ -45,30 +45,35 @@ async function PostItem({
     : null;
 
   return (
-    <Card className="relative">
+    <Card className="relative overflow-hidden border-border/60 bg-card/80 backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5">
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/40 to-transparent" />
       <Badge
-        className="absolute top-4 right-4"
+        className="absolute top-4 right-4 rounded-full px-2.5"
         variant={status === "IN_PROGRESS" ? "outline" : "default"}
       >
         {status}
       </Badge>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="gap-4 pb-4">
+        <CardTitle
+          className={cn("pr-20 leading-tight", isCard && "line-clamp-2")}
+        >
+          {title}
+        </CardTitle>
         <CardDescription
           className={cn(
             isCard && "line-clamp-2",
-            "prose dark:prose-invert prose-sm sm:prose-base max-w-none",
+            "prose dark:prose-invert prose-sm sm:prose-base max-w-none leading-relaxed text-foreground/90",
           )}
           dangerouslySetInnerHTML={{ __html: body }}
         />
         <PostImages images={images} />
         {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1">
+          <div className="mt-1 flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <Link key={tag} href={`/?tag=${tag}`}>
                 <Badge
                   variant={"outline"}
-                  className="cursor-pointer hover:bg-secondary"
+                  className="cursor-pointer rounded-full border-border/70 px-2.5 py-0.5 text-xs transition-colors hover:bg-secondary"
                 >
                   #{tag}
                 </Badge>
@@ -76,10 +81,20 @@ async function PostItem({
             ))}
           </div>
         )}
-        <p className="text-sm font-medium text-muted-foreground">
-          @{user.name}
-        </p>
-        <div>
+        <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-3">
+          <div className="flex items-center gap-1.5">
+            <p
+              className={cn(
+                "text-sm font-medium",
+                user.isPremium
+                  ? "bg-linear-to-r from-amber-500 via-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(245,158,11,0.35)]"
+                  : "text-muted-foreground",
+              )}
+            >
+              @{user.name}
+            </p>
+            {user.isPremium && <Crown className="h-3.5 w-3.5 text-amber-500" />}
+          </div>
           <VoteButtons
             postId={id}
             initialScore={score}
