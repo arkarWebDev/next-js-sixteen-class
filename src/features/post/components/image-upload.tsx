@@ -18,19 +18,17 @@ function ImageUpload({ value, onChange, max = 4 }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
-  const valueRef = useRef(value);
-  const onChangeRef = useRef(onChange);
-
-  valueRef.current = value;
-  onChangeRef.current = onChange;
-
   const { startUpload, isUploading } = useUploadThing("postImage", {
     onClientUploadComplete: (res: { url: string }[]) => {
       const urls = res.map((file) => file.url);
       if (urls.length) {
-        onChangeRef.current([...valueRef.current, ...urls].slice(0, max));
+        onChange([...value, ...urls].slice(0, max));
         toast.success("Image uploaded.");
       }
+      setDragActive(false);
+    },
+    onUploadError: () => {
+      toast.error("Image upload failed. Please try again.");
       setDragActive(false);
     },
   });
@@ -39,11 +37,14 @@ function ImageUpload({ value, onChange, max = 4 }: ImageUploadProps) {
     if (!fileList?.length) return;
     const allowed = Math.max(0, max - value.length);
     if (allowed <= 0) {
-      toast.error("Maxium images reached.");
+      toast.error("Maximum images reached.");
       return;
     }
     const files = Array.from(fileList).slice(0, allowed);
-    await startUpload(files);
+    const uploaded = await startUpload(files);
+    if (!uploaded) {
+      toast.error("Unable to upload image(s). Please try again.");
+    }
     if (fileInputRef?.current) {
       fileInputRef.current.value = "";
     }
@@ -67,13 +68,21 @@ function ImageUpload({ value, onChange, max = 4 }: ImageUploadProps) {
         }}
         onDragLeave={() => setDragActive(false)}
         onDrop={onDrop}
+        onClick={() => fileInputRef.current?.click()}
         className={cn(
-          "relative flex flex-col gap-3 rounded-xl border border-dashed bg-linear-to-br from-secondary/50 to-accent/40 p-4 transition-all",
+          "relative flex cursor-pointer flex-col gap-3 rounded-xl border border-dashed bg-linear-to-br from-secondary/50 to-accent/40 p-4 transition-all",
           dragActive
             ? "border-primary shadow-lg shadow-primary/20"
             : "border-border",
         )}
-      />
+      >
+        <p className="text-sm font-medium text-foreground/90">
+          Drop images here
+        </p>
+        <p className="text-xs text-muted-foreground">
+          or click anywhere in this box to browse files
+        </p>
+      </div>
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-sm font-semibold">Attach images</p>
@@ -112,7 +121,9 @@ function ImageUpload({ value, onChange, max = 4 }: ImageUploadProps) {
             />
             <button
               type="button"
-              onClick={() => onChange(value.filter((img) => img !== url))}
+              onClick={() =>
+                onChange(value.filter((_, imageIndex) => imageIndex !== i))
+              }
               className="absolute right-2 top-2 bg-red-600 p-2 w-8 h-8 rounded-full"
             >
               <Trash2 className="h-4 w-4" />
