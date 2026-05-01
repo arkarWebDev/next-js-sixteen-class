@@ -5,6 +5,7 @@ export type CommentwithUsername = Prisma.CommentGetPayload<{
     user: {
       select: {
         name: true;
+        isPremium: true;
       };
     };
   };

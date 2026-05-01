@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Crown, Edit, MoveUpRight } from "lucide-react";
+import { Crown, Edit, MessageCircle, MoveUpRight } from "lucide-react";
 import Link from "next/link";
 import { editPostPath, singlePostPath } from "@/path";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,9 @@ interface Props extends Post {
   isCard?: boolean;
   user: User;
   votes: { value: number; userId: string }[];
+  _count: {
+    comments: number;
+  };
 }
 
 async function PostItem({
@@ -33,6 +36,7 @@ async function PostItem({
   status,
   user,
   votes,
+  _count,
   tags,
 }: Props) {
   const session = await getSession();
@@ -82,18 +86,26 @@ async function PostItem({
           </div>
         )}
         <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-3">
-          <div className="flex items-center gap-1.5">
-            <p
-              className={cn(
-                "text-sm font-medium",
-                user.isPremium
-                  ? "bg-linear-to-r from-amber-500 via-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(245,158,11,0.35)]"
-                  : "text-muted-foreground",
+          <div className="space-y-1">
+            <div className="flex items-center gap-1.5">
+              <p
+                className={cn(
+                  "text-sm font-medium",
+                  user.isPremium
+                    ? "bg-linear-to-r from-amber-500 via-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(245,158,11,0.35)]"
+                    : "text-muted-foreground",
+                )}
+              >
+                @{user.name}
+              </p>
+              {user.isPremium && (
+                <Crown className="h-3.5 w-3.5 text-amber-500" />
               )}
-            >
-              @{user.name}
-            </p>
-            {user.isPremium && <Crown className="h-3.5 w-3.5 text-amber-500" />}
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <MessageCircle className="h-3.5 w-3.5" />
+              <span>{_count.comments} comments</span>
+            </div>
           </div>
           <VoteButtons
             postId={id}

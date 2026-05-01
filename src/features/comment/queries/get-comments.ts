@@ -9,6 +9,7 @@ export const getComments = async (postId: string) => {
       user: {
         select: {
           name: true,
+          isPremium: true,
         },
       },
     },
