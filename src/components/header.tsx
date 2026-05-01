@@ -1,4 +1,4 @@
-import { postsPath, signInPath, signUpPath } from "@/path";
+import { postsPath, profilePath, signInPath, signUpPath } from "@/path";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggler";
@@ -42,6 +42,9 @@ function SignInAndSignUpButtons() {
 function SignOutButton() {
   return (
     <>
+      <Button variant={"link"}>
+        <Link href={profilePath}>profile</Link>
+      </Button>
       <Button variant={"link"}>
         <Link href={postsPath}>my posts</Link>
       </Button>
